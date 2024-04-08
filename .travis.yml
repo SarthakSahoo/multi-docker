@@ -1,0 +1,13 @@
+language: generic 
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t froggyking/react-test -f ./client/Dockerfile.dev ./client
+script:
+  - docker run -e CI=true froggyking/react-test npm test
+after_success:
+  - docker build -t froggyking/multi-client ./client
+  - docker build -t froggyking/multi-nginx ./nginx
+  - docker build -t froggyking/multi-server ./server
+  - docker build -t froggyking/multi-worker ./worker
